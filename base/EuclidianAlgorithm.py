@@ -1,3 +1,12 @@
+def euclidean_algorithm(a, b):
+    while a != 0 and b != 0:
+        if a > b:
+            a = a % b
+        else:
+            b = b % a
+    return a+b
+
+
 def extended_euclidean_algorithm(a, b):
     """
     Возвращает кортеж из трёх элементов (gcd, x, y), такой, что

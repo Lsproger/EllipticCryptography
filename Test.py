@@ -1,6 +1,7 @@
 # Tests of methods in Operations.py
 from base.Operations import *
 from Realisation.ECDH import *
+from Realisation.ECDSA import *
 import random
 from User import *
 
@@ -84,3 +85,12 @@ if Alice.get_secret('Bruce').x == Bruce.get_secret('Alice').x and Alice.get_secr
     print('EEEEE\nONO RABOTAET')
 else:
     print('Zaz')
+
+from Realisation.Hash import cuted_hash as ch
+sig = get_signature(ch('lalnbjwhhfhhafkjbskdhbfjhsbfhbsdfalala', curve_P256.n), Alice.private_key, curve_P256)
+
+res = check_signature(Alice.public_key, ch('lalnbjwhhfhhafkjbskdhbfjhsbfhbsdfalala', curve_P256.n), sig, curve_P256)
+if res:
+    print('+')
+else:
+    print('-')
