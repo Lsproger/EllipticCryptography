@@ -81,6 +81,6 @@ Alice.add_secret('Bruce', q_B)
 Bruce.add_secret('Alice', q_A)
 
 if Alice.get_secret('Bruce').x == Bruce.get_secret('Alice').x and Alice.get_secret('Bruce').y == Bruce.get_secret('Alice').y:
-    print('EEEEE\nAHUET\nONO RABOTAET')
+    print('EEEEE\nONO RABOTAET')
 else:
     print('Zaz')
