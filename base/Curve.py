@@ -18,7 +18,7 @@ class Curve:
                  b=curve_P256[1],
                  m=curve_P256[2],
                  n=curve_P256[3],
-                 g=Point(curve_P256[4].x, curve_P256[4].y)
+                 g: Point = Point(curve_P256[4].x, curve_P256[4].y)
                  ):
         self.__curve = tuple(a, b, m, n, g)
 

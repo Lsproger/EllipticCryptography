@@ -1,5 +1,4 @@
-from base.Point import Point
-from base.Curve import curve_P256
+from base.Curve import *
 from base.EuclidianAlgorithm import *
 
 
@@ -39,6 +38,10 @@ def points_sum(p1: Point, p2: Point, a=__a):
         print("NE MOZHET BIT?")
     return Point(r_x, r_y)
 
+
+def get_random_k(curve: Curve = curve_P256):
+    import random
+    return random.randint(1, curve[3] - 1)
 
 # 21 * P = 10101 * P = (((((2 * P) * 2) + P) * 2) * 2 + P)
 
