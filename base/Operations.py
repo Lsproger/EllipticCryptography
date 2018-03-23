@@ -2,7 +2,7 @@ from base.Curve import *
 from base.EuclidianAlgorithm import *
 
 
-__a = curve_P256[0]
+__a = curve_P256.a
 
 
 def multiply(p: Point, k, a=__a):
@@ -19,7 +19,7 @@ def multiply(p: Point, k, a=__a):
 def points_sum(p1: Point, p2: Point, a=__a):
 
     s = 0
-    mod_m = curve_P256[3]
+    mod_m = curve_P256.n
     if p1.x != p2.x:
         s = ((p1.y - p2.y) * inverse_of((p1.x - p2.x), mod_m)) % mod_m
 
@@ -39,9 +39,6 @@ def points_sum(p1: Point, p2: Point, a=__a):
     return Point(r_x, r_y)
 
 
-def get_random_k(curve: Curve = curve_P256):
-    import random
-    return random.randint(1, curve[3] - 1)
 
 # 21 * P = 10101 * P = (((((2 * P) * 2) + P) * 2) * 2 + P)
 
