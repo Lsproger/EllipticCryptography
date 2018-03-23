@@ -2,7 +2,7 @@
 from base.Operations import *
 from Realisation.ECDH import *
 import random
-
+from User import *
 
 a = -7
 b = 10
@@ -68,3 +68,19 @@ if r_A.x == r_B.x and r_A.y == r_B.y:
     print("\tdB = ", d_B)
 else:
     print("Not nice :(")
+
+# -------------------------------
+
+Alice = User()
+Bruce = User()
+
+q_A = Alice.public_key
+q_B = Bruce.public_key
+
+Alice.add_secret('Bruce', q_B)
+Bruce.add_secret('Alice', q_A)
+
+if Alice.get_secret('Bruce').x == Bruce.get_secret('Alice').x and Alice.get_secret('Bruce').y == Bruce.get_secret('Alice').y:
+    print('EEEEE\nAHUET\nONO RABOTAET')
+else:
+    print('Zaz')
