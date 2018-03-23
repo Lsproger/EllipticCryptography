@@ -44,8 +44,8 @@ print(r.x, "|||", r.y)
 # ---------------------------------------------
 # ALGORITHMS
 # Example of swapping keys
-d_A = get_private_key()
-d_B = get_private_key()
+d_A = get_random_k()
+d_B = get_random_k()
 
 q_A = get_public_key(d_A)
 q_B = get_public_key(d_B)
