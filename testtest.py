@@ -8,7 +8,7 @@ EllipticCurve = collections.namedtuple('EllipticCurve', 'name p a b g n h')
 curve = EllipticCurve(
     'secp256k1',
     # Field characteristic.
-    p=0xffffffff00000001000000000000000000000000ffffffffffffffffffffffff,
+    p=0xffffffff00000001000000000000000000000000ffffffffffffffffffffffff, #0xffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551
     # Curve coefficients.
     a=-3,
     b=0x5ac635d8aa3a93e7b3ebbd55769886bc651d06b0cc53b0f63bce3c3e27d2604b,
@@ -192,38 +192,48 @@ def inverse_of(k, p):
     #     return x % p
 
 
-def points_sum(p1: Point, p2: Point, a=curve.a):
+def points_sum(p1, p2, a=curve.a):
 
     s = 0
-    mod_m = curve_P256.n
-    if p1.x != p2.x:
-        s = ((p1.y - p2.y) * inverse_of((p1.x - p2.x), mod_m))
+    x1, y1 = p1
+    x2, y2 = p2
+    mod_m = curve_P256.m
+    if x1 != x2:
+        s = ((y1 - y2) * inverse_of((x1 - x2), mod_m))
 
     else:
-        if p1.y == -p2.y:
+        if y1 == -y2:
             return Point(0, 0)
-        elif p1.y == p2.y and p1.y == 0:
+        elif y1 == y2 and y1 == 0:
             return Point(0, 0, 0)
         else:
-            y = p1.y
-            inv_2y = inverse_mod(2 * y, mod_m)
-            x2a = ((3 * p1.x * p1.x) + a)
+            y = y1
+            # inv_2y = inverse_mod(2 * y1, mod_m)
+            if mod_m == curve.p:
+                print('mod_m == curve.p')
+            else:
+                print('mod_m = ', mod_m)
+                print('curve.p = ', curve.p)
+
+            inv_2y = inverse_mod(2 * y1, mod_m)
+            x2a = ((3 * x1 * x1) + a)
             s = (x2a * inv_2y)
     if s != 0:
 
-            r_x = ((s * s) - p1.x - p2.x)
-            r_y = (-p1.y + s * (p1.x - r_x))
+            r_x = ((s * s) - x1 - x2) % curve.p
+            r_y = (-y1 + s * (x1 - r_x)) % curve.p
     else:
         print("NE MOZHET BIT?")
-    return Point(r_x % mod_m, r_y % mod_m)
+    return Point(r_x, r_y)
 
 
 res1 = point_add(curve.g, curve.g)
 
-poent = Point(curve.g[0], curve.g[1])
 
-res2 = points_sum(poent, poent, curve.a)
+res2 = points_sum(curve.g, curve.g, curve.a)
 
+print(res1)
+print(res2.x, res2.y)
 
 if res1[0] == res2.x and res1[1] == res2.y:
     print('PIZDEC')
