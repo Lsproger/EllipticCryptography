@@ -17,15 +17,19 @@ def convert_base(num, to_base=10, from_base=10):
         return convert_base(n // to_base, to_base) + alphabet[n % to_base]
 
 
-def hash(data):
+def get_hash(data, n):
+    """Returns the truncated SHA521 hash of the message."""
     import hashlib
-    return hashlib.sha384(bytes(data, 'utf-8')).hexdigest()
+    message_hash = hashlib.sha512(data).digest()
+    e = int.from_bytes(message_hash, 'big')
 
+    # FIPS 180 says that when a hash needs to be truncated, the rightmost bits
+    # should be discarded.
+    z = e >> (e.bit_length() - n.bit_length())
 
-def cuted_hash(data, n):
-    h = hash(data)
-    ch = convert_base(h, 10, 16)
-    return int(ch[:(len(str(n)))], 10)
+    assert z.bit_length() <= n.bit_length()
+
+    return z
 
 
 

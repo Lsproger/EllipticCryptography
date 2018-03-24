@@ -86,11 +86,38 @@ if Alice.get_secret('Bruce').x == Bruce.get_secret('Alice').x and Alice.get_secr
 else:
     print('Zaz')
 
-from Realisation.Hash import cuted_hash as ch
-sig = get_signature(ch('lalnbjwhhfhhafkjbskdhbfjhsbfhbsdfalala', curve_P256.n), Alice.private_key, curve_P256)
+hmsg = get_hash(b'Hello', curve_P256.n)
 
-res = check_signature(Alice.public_key, ch('lalnbjwhhfhhafkjbskdhbfjhsbfhbsdfalala', curve_P256.n), sig, curve_P256)
+sig = get_signature(hmsg, Alice.private_key, curve_P256)
+
+res = check_signature(Alice.public_key, hmsg, sig, curve_P256)
+
 if res:
     print('+')
 else:
     print('-')
+
+
+def get_key_pair():
+    private = get_random_k()
+    public = multiply(curve_P256.g, private)
+    return private, public
+
+
+private, public = get_key_pair()
+
+msg = b'Hi there!'
+
+
+sign = sign_message(private, msg, curve_P256)
+
+print(verify_signature(public, msg, sign, curve_P256))
+
+from hmmm import make_keypair as kp
+private, public = kp()
+
+msg = b'Hithere!'
+
+sign = sign_message(private, msg, curve_P256)
+pub = Point(public[0], public[1])
+print(verify_signature(pub, msg, sign, curve_P256))
