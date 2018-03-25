@@ -5,43 +5,6 @@ from Realisation.ECDSA import *
 import random
 from User import *
 
-a = -7
-b = 10
-
-# METHODS
-
-print("----TEST #1---------------")
-p = Point(1, 2)
-q = Point(3, 4)
-
-r = points_sum(p, q, -7)  # -3;2
-print(r.x, "|||", r.y)
-
-
-print("----TEST #2---------------")
-p = Point(-1, 4)
-q = Point(1, 2)
-
-r = points_sum(p, q, -7)  # 1;-2
-print(r.x, "|||", r.y)
-
-
-print("----TEST #3---------------")
-p = Point(1, 2)
-q = Point(1, 2)
-
-r = points_sum(p, q, -7)
-print(r.x, "|||", r.y)
-
-
-print("----TEST #1---------------")
-p = Point(-1, 4)
-q = Point(1, 2)
-
-r = points_sum(p, q, -7)
-print(r.x, "|||", r.y)
-
-
 # ---------------------------------------------
 # ALGORITHMS
 # Example of swapping keys
@@ -102,22 +65,3 @@ def get_key_pair():
     private = get_random_k()
     public = multiply(curve_P256.g, private)
     return private, public
-
-
-private, public = get_key_pair()
-
-msg = b'Hi there!'
-
-
-sign = sign_message(private, msg, curve_P256)
-
-print(verify_signature(public, msg, sign, curve_P256))
-
-from hmmm import make_keypair as kp
-private, public = kp()
-
-msg = b'Hithere!'
-
-sign = sign_message(private, msg, curve_P256)
-pub = Point(public[0], public[1])
-print(verify_signature(pub, msg, sign, curve_P256))

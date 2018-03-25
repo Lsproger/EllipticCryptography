@@ -4,10 +4,6 @@ import random
 
 
 def get_signature(z, private_key, curve: Curve=curve_P256):
-    lz = len(str(z))
-    ln = len(str(curve.n))
-    if lz != ln:
-        print('ZALUPAAAAAAAA = lz - ln = ', lz-ln)
     s = r = k = 0
     _r = lambda __k: multiply(curve.g, k).x % curve.n
     while s == 0:
@@ -17,7 +13,6 @@ def get_signature(z, private_key, curve: Curve=curve_P256):
         _k_ = inverse_of(k, curve.n)
         what = (z + r * private_key)
         s = (_k_ * what) % curve.n
-    print('r = ', r, '\n', 's = ', s)
     return r, s
 
 
