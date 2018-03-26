@@ -2,10 +2,12 @@
 from base.Operations import *
 from Realisation.ECDH import *
 from Realisation.ECDSA import *
+from Realisation.PSEC_KEM import *
 import random
 from User import *
 import os
 from pbkdf2 import PBKDF2
+
 
 # ---------------------------------------------
 # ALGORITHMS
@@ -64,4 +66,15 @@ else:
 
 
 print("----------------------------------------------------------")
+print('TESTING PSEC KEM')
+
+private, public = G(curve_P256)
+
+s, T, ct = E(public, "Hello", curve_P256)
+
+print(int.from_bytes(ct, 'big'))
+
+K = D(private, s, T, ct, curve_P256)
+
+print(K.bit_length())
 
