@@ -4,6 +4,8 @@ from Realisation.ECDH import *
 from Realisation.ECDSA import *
 import random
 from User import *
+import os
+from pbkdf2 import PBKDF2
 
 # ---------------------------------------------
 # ALGORITHMS
@@ -61,7 +63,5 @@ else:
     print('-')
 
 
-def get_key_pair():
-    private = get_random_k()
-    public = multiply(curve_P256.g, private)
-    return private, public
+print("----------------------------------------------------------")
+

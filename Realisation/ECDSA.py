@@ -1,5 +1,7 @@
 from Realisation.base import *
 from Realisation.Hash import *
+from base.EuclidianAlgorithm import inverse_of
+from base.Operations import *
 import random
 
 
