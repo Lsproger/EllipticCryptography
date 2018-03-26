@@ -29,39 +29,3 @@ def check_signature(public_key, z, signature, curve: Curve=curve_P256):
         return 0
 
 
-def sign_message(private_key, message, curve):
-    z = get_hash(message, curve.n)
-
-    r = 0
-    s = 0
-
-    while not r or not s:
-        k = random.randrange(1, curve.n)
-        p = multiply(curve.g, k)
-
-        r = p.x % curve.n
-        s = ((z + r * private_key) * inverse_of(k, curve.n)) % curve.n
-
-    return r, s
-
-
-def verify_signature(public_key, message, signature, curve):
-    z = get_hash(message, curve.n)
-
-    r, s = signature
-
-    w = inverse_of(s, curve.n)
-    u1 = (z * w) % curve.n
-    u2 = (r * w) % curve.n
-
-    p = points_sum(multiply(curve.g, u1),
-                   multiply(public_key, u2))
-
-    if (r % curve.n) == (p.x % curve.n):
-        return 'signature matches'
-    else:
-        return 'invalid signature'
-
-
-
-

@@ -1,4 +1,3 @@
-
 class Point:
 
     is_own = 1

@@ -1,4 +1,3 @@
-from base.Curve import curve_P256 as p256
 from Realisation.base import *
 
 
@@ -6,7 +5,7 @@ class User:
     __secrets = {}
     __public_key = 0
 
-    def __init__(self, curve: Curve=p256):
+    def __init__(self, curve: Curve=curve_P256):
         self.__curve = curve
         self.__private_key = get_random_k(curve)
 

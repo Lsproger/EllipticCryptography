@@ -1,6 +1,5 @@
 # y2 = x3 + a x + b (mod m)
 # 4a^3 + 27b^2 ≠ 0 (mod m)
-
 from base.Point import Point
 
 

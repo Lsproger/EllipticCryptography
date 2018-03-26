@@ -1,5 +1,5 @@
-from base.Operations import *
-from base.Curve import curve_P256
+from base.Operations import multiply
+from base.Curve import Curve, curve_P256
 
 
 def get_random_k(curve: Curve=curve_P256):
