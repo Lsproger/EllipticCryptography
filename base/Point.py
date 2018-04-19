@@ -1,7 +1,5 @@
 class Point:
 
-    is_own = 1
-
     def __init__(self, x, y):
         self.__point = (x, y)
 
