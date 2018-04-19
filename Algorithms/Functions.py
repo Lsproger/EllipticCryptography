@@ -12,6 +12,12 @@ def get_public_key(private_key, curve: Curve=curve_P256):
     return multiply(curve.g, private_key, curve.a)
 
 
+def generate_keys(curve: Curve=curve_P256):
+    private = get_random_k(curve)
+    public = get_public_key(private, curve)
+    return private, public
+
+
 def get_hash(data, n):
     """Returns the truncated SHA521 hash of the message."""
     import hashlib

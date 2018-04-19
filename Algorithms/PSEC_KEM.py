@@ -8,7 +8,7 @@ from string import ascii_letters
 
 # Key generation
 def generate_keys(curve: Curve=curve_P256):
-    private = get_random_k()
+    private = get_random_k(curve)
     public = get_public_key(private, curve)
     return private, public
 
