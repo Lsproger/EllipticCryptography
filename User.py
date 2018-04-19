@@ -1,4 +1,4 @@
-from Realisation.base import *
+from Algorithms.Functions import *
 
 
 class User:
@@ -29,7 +29,7 @@ class User:
         return self.__secrets[user_name]
 
     def add_secret(self, user_name, public_key):
-        from Realisation.ECDH import get_secret
+        from Algorithms.ECDH import get_secret
         self.__secrets[user_name] = get_secret(self.__private_key, public_key, self.__curve)
 
 

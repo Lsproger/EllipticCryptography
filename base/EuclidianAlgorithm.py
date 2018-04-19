@@ -44,7 +44,7 @@ def inverse_of(n, p):
         # Или n равно 0, или p не является простым.
         raise ValueError(
             '{} has no multiplicative inverse '
-            'modulo {}'.format(n, p))
+            'mod {}'.format(n, p))
     else:
         return x % p
 

@@ -1,12 +1,7 @@
-# Tests of methods in Operations.py
-from base.Operations import *
-from Realisation.ECDH import *
-from Realisation.ECDSA import *
-from Realisation.PSEC_KEM import *
-import random
+from Algorithms.ECDH import *
+from Algorithms.ECDSA import *
+from Algorithms.PSEC_KEM import *
 from User import *
-import os
-from pbkdf2 import PBKDF2
 
 
 # ---------------------------------------------
@@ -68,13 +63,13 @@ else:
 print("----------------------------------------------------------")
 print('TESTING PSEC KEM')
 
-private, public = G(curve_P256)
+private, public = generate_keys(curve_P256)
 
-s, T, ct = E(public, "Hello", curve_P256)
+s, T, ct = encrypt(public, "Hello", curve_P256)
 
 print(int.from_bytes(ct, 'big'))
 
-K = D(private, s, T, ct, curve_P256)
+K = decrypt(private, s, T, ct, curve_P256)
 
-print(K.bit_length())
+print(K)
 

@@ -1,7 +1,4 @@
 import os
-# from cryptography.hazmat.primitives import hashes
-# from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-# from cryptography.hazmat.backends import default_backend
 from pbkdf2 import crypt
 from pbkdf2 import PBKDF2
 from hashlib import sha384 as SHA384
@@ -16,5 +13,3 @@ if pwhash == crypt(alleged_pw, pwhash):
     print("Password good")
 else:
     print("Invalid password")
-
-

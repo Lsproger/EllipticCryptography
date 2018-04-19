@@ -7,15 +7,14 @@ from string import ascii_letters
 
 
 # Key generation
-def G(curve: Curve=curve_P256):
+def generate_keys(curve: Curve=curve_P256):
     private = get_random_k()
     public = get_public_key(private, curve)
     return private, public
 
 
 # Encryption
-def E(public_key: Point, msg, curve: Curve=curve_P256):
-    import hashlib
+def encrypt(public_key: Point, msg, curve: Curve=curve_P256):
     l = 128
     r = int(bin(get_random_k())[2:l+2], 2)
     keylen = 256
@@ -28,8 +27,8 @@ def E(public_key: Point, msg, curve: Curve=curve_P256):
     T = multiply(curve.g, t, curve.a)
     U = multiply(public_key, t, curve.a)
     bytes_u_x_ = bytes(str(U.x)[:8], 'utf-8')
-    KDF_T_U = int.from_bytes(PBKDF2(str(T.x), bytes_u_x_).read(int(l / 8)), 'big')
-    s = r ^ KDF_T_U
+    kdf_T_U = int.from_bytes(PBKDF2(str(T.x), bytes_u_x_).read(int(l / 8)), 'big')
+    s = r ^ kdf_T_U
     obj = AES.new(str(K)[:32], AES.MODE_CBC, "ABCDEFGHABCDEFGH")
     _n = 16 - msg.__len__() % 16
     rand_str = ''.join(choice(ascii_letters) for i in range(_n))
@@ -38,12 +37,12 @@ def E(public_key: Point, msg, curve: Curve=curve_P256):
 
 
 # Decryption
-def D(private_key, s, T: Point, c_text, curve: Curve=curve_P256):
+def decrypt(private_key, s, T: Point, c_text, curve: Curve=curve_P256):
     l = 128
     U = multiply(T, private_key)
     bytes_u_x_ = bytes(str(U.x)[:8], 'utf-8')
-    KDF_T_U = int.from_bytes(PBKDF2(str(T.x), bytes_u_x_).read(int(l / 8)), 'big')
-    r = s ^ KDF_T_U
+    kdf_T_U = int.from_bytes(PBKDF2(str(T.x), bytes_u_x_).read(int(l / 8)), 'big')
+    r = s ^ kdf_T_U
     keylen = 256
     _t_len = keylen + 128
     len_ = (keylen + _t_len) / 8
@@ -54,9 +53,7 @@ def D(private_key, s, T: Point, c_text, curve: Curve=curve_P256):
     T_ = multiply(curve.g, t, curve.a)
     if T_.x == T.x and T_.y == T.y:
         obj = AES.new(str(K)[:32], AES.MODE_CBC, "ABCDEFGHABCDEFGH")
-        print(obj.decrypt(c_text))
-        print
-        return K
+        return obj.decrypt(c_text)
     else:
         return 'incorrect'
 
