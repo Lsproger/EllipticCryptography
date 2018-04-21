@@ -8,9 +8,6 @@ def DispatchServer(conn, addr):
     print('Dispatch')
     print('connected:', addr)
 
-        #data = conn.recv(1024)
-        #if not data:
-         #   break
     conn.send(b'Hello')
 
     conn.close()
