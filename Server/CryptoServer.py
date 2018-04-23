@@ -1,9 +1,8 @@
-import threading
-import sqlite3
+from Server.UserConnection import Connection
 from socket import socket
-from Server.Connection import Connection
-
+import sqlite3
 import threading
+
 
 connections_pull = [[]]
 connections = connections_pull[0]
@@ -12,9 +11,15 @@ connections = connections_pull[0]
 def SaveKey(conn: socket, addr, username):
     print('SaveKey service started')
     key = conn.recv(1024).decode(encoding='utf-8').split(' ')
+
+    print(key)
     dbconn = sqlite3.connect('ServerStorage.db')
-    dbconn.execute('insert or replace into OPEN_KEYS values(?, ?, ?)', [()])
-    cursor = dbconn.cursor()
+    cur = dbconn.cursor()
+    cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    print(cur.fetchall())
+
+    cur.execute("insert or replace into OPEN_KEYS values(?, ?, ?)", [(username, int(key[0]), int(key[1]))])
+    # cursor = dbconn.cursor()
 
 
 def DiffieHellman():
@@ -28,15 +33,15 @@ def PSEC_KEM():
 services = {'SAVE_KEY': SaveKey, 'DIFFIE-HELLMAN': DiffieHellman, 'SEND_MESSAGE': PSEC_KEM}
 
 
-def DispatchServer(conn: socket, addr):
+def DispatchServer(conn: socket, addr, username):
     print('Dispatch connected:', addr)
     conn.send(b'OK')
     service = conn.recv(1024)
     print(service)
     for s in services.keys():
         if service.decode(encoding='utf-8') == s:
-            conn.send(bytes(s))
-            threading.Thread(target=services[s], args=(conn, ))
+            conn.send(bytes(s, 'utf-8'))
+            threading.Thread(target=services[s], args=(conn, addr, username)).start()
             break
     if conn is not None:
         conn.send(b'No such service')
@@ -75,7 +80,7 @@ if __name__ == '__main__':
     cmd = llist[0]
     x = 10
     print('Accept')
-    sock.bind(('', 9099))
+    sock.bind(('', 9090))
     print('listen')
     sock.listen(1)
     accept_serv = threading.Thread(target=AcceptServer, args=(sock, cmd))

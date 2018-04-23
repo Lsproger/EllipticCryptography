@@ -1,10 +1,10 @@
-import socket
+
 class Connection:
-    def __init__(self, conn: socket, addr, name):
+
+    def __init__(self, conn, addr, name):
         self.__connection = conn
         self.__address = addr
         self.__username = name
-
 
     @property
     def conn(self):

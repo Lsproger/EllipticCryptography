@@ -2,9 +2,10 @@ import socket
 
 
 def ConnectToServer(username):
+    print('Connect user')
     sock = socket.socket()
     sock.connect(('localhost', 9090))
-    sock.send(bytes(username))
+    sock.send(bytes(username, 'utf-8'))
     resp = sock.recv(1024)
     if resp == b'OK':
         return sock
@@ -25,6 +26,7 @@ try:
     sock.send(service)
     answ = sock.recv(1024)
     print(answ)
+    sock.send(b'21321321656554 54648649849846489')
     sock.close()
 except Exception as ex:
     print('Exception:\n', ex.__str__())
