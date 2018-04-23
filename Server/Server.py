@@ -1,45 +1,46 @@
 import threading
 import sqlite3
 from socket import socket
+from Server.Connection import Connection
 
 import threading
 
-services = [b'SAVE_KEY', b'DIFFIE-HELLMAN',  b'SEND_MESSAGE']
+connections_pull = [[]]
+connections = connections_pull[0]
 
 
-def DispatchServer(conn: socket, addr):
-    print('Dispatch')
-    print('connected:', addr)
-    print('conn:\n', conn)
-
-
-    conn.send(b'Connected')
-    service = conn.recv(1024)
-    print(service)
-    for s in services:
-        if service == s:
-            conn.send(s)
-            conn.close()
-            conn = None
-            break
-    if conn is not None:
-        conn.send(b'No such service')
-        conn.close()
-
-
-def SaveKey(conn: socket, addr):
+def SaveKey(conn: socket, addr, username):
+    print('SaveKey service started')
     key = conn.recv(1024).decode(encoding='utf-8').split(' ')
     dbconn = sqlite3.connect('ServerStorage.db')
-    dbconn.execute('insert or replace into OPEN_KEYS values()')
+    dbconn.execute('insert or replace into OPEN_KEYS values(?, ?, ?)', [()])
     cursor = dbconn.cursor()
-    return 0
 
 
 def DiffieHellman():
     return 0
 
+
 def PSEC_KEM():
     return 0
+
+
+services = {'SAVE_KEY': SaveKey, 'DIFFIE-HELLMAN': DiffieHellman, 'SEND_MESSAGE': PSEC_KEM}
+
+
+def DispatchServer(conn: socket, addr):
+    print('Dispatch connected:', addr)
+    conn.send(b'OK')
+    service = conn.recv(1024)
+    print(service)
+    for s in services.keys():
+        if service.decode(encoding='utf-8') == s:
+            conn.send(bytes(s))
+            threading.Thread(target=services[s], args=(conn, ))
+            break
+    if conn is not None:
+        conn.send(b'No such service')
+        conn.close()
 
 
 def AcceptServer(sock: socket, command):
@@ -47,8 +48,10 @@ def AcceptServer(sock: socket, command):
         while command[0] != 'exit':
             print('Accept')
             conn, addr = sock.accept()
-            print('Client connected:\n\taddress: %s' % addr[1])
-            threading.Thread(target=DispatchServer, args=(conn, addr)).start()
+            username = conn.recv(1024).decode(encoding='utf-8')
+            connections.append(Connection(conn, addr, username))
+            print('Client connected:\n\taddress: ', addr, '\n\tUsername: ', username)
+            threading.Thread(target=DispatchServer, args=(conn, addr, username)).start()
     except Exception as ex:
         print('Exception %s' % ex.__str__())
         if sock:
