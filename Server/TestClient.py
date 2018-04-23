@@ -26,7 +26,7 @@ try:
     sock.send(service)
     answ = sock.recv(1024)
     print(answ)
-    sock.send(b'21321321656554 54648649849846489')
+    sock.send(b'1234 56789')
     sock.close()
 except Exception as ex:
     print('Exception:\n', ex.__str__())

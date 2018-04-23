@@ -10,15 +10,17 @@ connections = connections_pull[0]
 
 def SaveKey(conn: socket, addr, username):
     print('SaveKey service started')
-    key = conn.recv(1024).decode(encoding='utf-8').split(' ')
-
+    key_string = conn.recv(1024).decode(encoding='utf-8')
+    key = str(key_string).split(' ')
     print(key)
     dbconn = sqlite3.connect('ServerStorage.db')
     cur = dbconn.cursor()
     cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
     print(cur.fetchall())
 
-    cur.execute("insert or replace into OPEN_KEYS values(?, ?, ?)", [(username, int(key[0]), int(key[1]))])
+    cur.execute("insert or replace into OPEN_KEYS values(?, ?, ?)", (username, int(key[0]), int(key[1])))
+    cur.execute("select * from OPEN_KEYS")
+    dbconn.commit()
     # cursor = dbconn.cursor()
 
 
